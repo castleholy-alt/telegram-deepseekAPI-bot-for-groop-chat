@@ -163,7 +163,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     if WHITELIST_ENABLED:
         response += f"\n\n🔒 Whitelist mode is **enabled**"
-        await update.message.reply_text(response, parse_mode='Markdown')
+    
+    # Always send the response
+    await update.message.reply_text(response, parse_mode='Markdown')
+
 async def info_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle /info command - shows user and chat IDs for whitelist configuration."""
     user = update.message.from_user
@@ -358,7 +361,7 @@ async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle errors."""
     print(f"Error: {context.error}")
 
-def main():
+async def main():
     """Start the bot."""
     # Create application
     application = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
@@ -386,7 +389,11 @@ def main():
     else:
         print("- Whitelist mode DISABLED (public access)")
     
-    application.run_polling(allowed_updates=Update.ALL_TYPES)
+    # Задержка для избежания конфликта экземпляров
+    print("Waiting 5 seconds before starting polling to avoid conflict...")
+    await asyncio.sleep(5)
+    
+    await application.run_polling(allowed_updates=Update.ALL_TYPES)
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
