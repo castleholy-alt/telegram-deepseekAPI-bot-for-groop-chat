@@ -163,7 +163,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     if WHITELIST_ENABLED:
         response += f"\n\n🔒 Whitelist mode is **enabled**"
-    
+        await update.message.reply_text(response, parse_mode='Markdown')
 async def info_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle /info command - shows user and chat IDs for whitelist configuration."""
     user = update.message.from_user
